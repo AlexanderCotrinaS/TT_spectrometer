@@ -14,7 +14,7 @@ device_1 <- tt_data_9am %>%
 ggplot(device_1, aes(x = date, y = DN_810)) +
   geom_point() +
   labs(title = "Individual TT+ ",
-       x = "Date", y = "Value")+
+       x = "Date", y = "Value (μW/cm2) - TT+")+
   theme_minimal()
 
 # TT ID subplots----------------------------------------------------------------------------------------------------------------------------
@@ -27,7 +27,7 @@ subset1 <- tt_data_9am %>%
 ggplot(subset1, aes(x = date, y = DN_810, color = id)) +
   geom_point() +
   labs(title = "",
-       x = "Date", y = "DN_810")+
+       x = "Date", y = "DN_810 Value (μW/cm2) - TT+")+
   theme_minimal()
 
 
@@ -54,6 +54,6 @@ ggplot(median_long, aes(x = date, y = DN_Value, color = DN)) +
   geom_line(linewidth = 0.2) +
   labs(title = "Timeseries data according DN_ value",
        x = "Date",
-       y = "DN_Value") +
+       y = "Value (μW/cm2) - TT+") +
   theme_minimal()
 
