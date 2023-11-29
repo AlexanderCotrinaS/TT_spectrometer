@@ -14,7 +14,8 @@ device_1 <- tt_data_9am %>%
 ggplot(device_1, aes(x = date, y = DN_810)) +
   geom_point() +
   labs(title = "Individual TT+ ",
-       x = "Date", y = "Value")
+       x = "Date", y = "Value")+
+  theme_minimal()
 
 # TT ID subplots----------------------------------------------------------------------------------------------------------------------------
 subset1_ids <- c("52140002", "52140012", "52140014","52140011","52140016", "52140018", "52140026", "52140028")
@@ -26,7 +27,8 @@ subset1 <- tt_data_9am %>%
 ggplot(subset1, aes(x = date, y = DN_810, color = id)) +
   geom_point() +
   labs(title = "",
-       x = "Date", y = "DN_810")
+       x = "Date", y = "DN_810")+
+  theme_minimal()
 
 
 ## Median --------------------------------------------------------------------------------------------
@@ -54,63 +56,4 @@ ggplot(median_long, aes(x = date, y = DN_Value, color = DN)) +
        x = "Date",
        y = "DN_Value") +
   theme_minimal()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-calcular_ndvi <- function(data) {
-  # NDVI = (NIR - Red) / (NIR + Red)
-  data$ndvi <- (data$DN_860 - data$DN_650) / (data$DN_860 + data$DN_650)
-  return(data)
-}
-
-# ejecutar function of NDVI
-medians_subset1 <- calcular_ndvi(medians_subset1)
-medians_subset2 <- calcular_ndvi(medians_subset2)
-medians_subset3 <- calcular_ndvi(medians_subset3)
-total_roca_uk_ndvi <- calcular_ndvi(filtered_roca_uk)
-
-# Filtrar los valores de ndvi mayores o iguales a 0
-medians_subset1 <- medians_subset1[medians_subset1$ndvi >= 0, ]
-medians_subset2 <- medians_subset2[medians_subset2$ndvi >= 0, ]
-medians_subset3 <- medians_subset3[medians_subset3$ndvi >= 0, ]
-
-# Total Rocas without NAs
-total_roca_uk_ndvi <- total_roca_uk_ndvi[total_roca_uk_ndvi$ndvi >=0,]
-total_roca_uk_ndvi <- na.omit(total_roca_uk_ndvi)
-
-# Crear un gráfico de puntos con ggplot2
-ggplot(data = total_roca_uk_ndvi, aes(x = date, y = ndvi)) +
-  geom_point() +
-  labs(x = "Fecha", y = "NDVI") +
-  ggtitle("Gráfico de NDVI")
-
-
-# Fusionar los subsets---------------------------------------------------------------------------------------------------
-rocas <- bind_rows(medians_subset1, medians_subset2, medians_subset3)
-rocas$Specie <- "Quercus cerris"
-
-# Plot de serie de tiempo
-plot <- ggplot(merged_df, aes(x = date)) +
-  geom_line(aes(y = DN_810, color = "DN_810")) +
-  geom_line(aes(y = DN_500, color = "DN_500")) +
-  geom_line(aes(y = DN_550, color = "DN_550")) +
-  labs(x = "Fecha", y = "Valor DN_", color = "DN_") +
-  scale_color_manual(values = c(DN_810 = "red", DN_500 = "blue", DN_550 = "green")) +
-  theme_minimal()
-
-plot
-
-#Export data----------------------------
-write.csv(total_roca_uk_ndvi, "Roca_total.csv", row.names = FALSE)
 
